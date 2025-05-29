@@ -4,11 +4,107 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:elaphureLink.Wpf.Pages"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SettingPage">
-    <!-- todo -->
-    <Grid>
-
-    </Grid>
+      Title="Settings">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20" Spacing="20">
+            
+            <!-- Application Settings Section -->
+            <ui:SimpleStackPanel>
+                <TextBlock Text="Application Settings" 
+                          FontSize="20" 
+                          FontWeight="SemiBold" 
+                          Margin="0,0,0,10"/>
+                
+                <!-- Startup Settings -->
+                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <CheckBox x:Name="StartupCheckBox" 
+                                 Content="Start with Windows" 
+                                 Checked="StartupCheckBox_Checked"
+                                 Unchecked="StartupCheckBox_Unchecked"/>
+                        <ui:FontIcon Glyph="&#xE7E8;" FontSize="16" Margin="5,0,0,0"/>
+                    </ui:SimpleStackPanel>
+                    <TextBlock Text="Automatically start elaphureLink when Windows starts"
+                              Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"
+                              FontSize="12"
+                              Margin="20,0,0,0"/>
+                </ui:SimpleStackPanel>
+                
+                <!-- Start Minimized -->
+                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10" Margin="0,20,0,0">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <CheckBox x:Name="StartMinimizedCheckBox" 
+                                 Content="Start minimized to system tray" 
+                                 Checked="StartMinimizedCheckBox_Checked"
+                                 Unchecked="StartMinimizedCheckBox_Unchecked"/>
+                        <ui:FontIcon Glyph="&#xE921;" FontSize="16" Margin="5,0,0,0"/>
+                    </ui:SimpleStackPanel>
+                    <TextBlock Text="Start the application minimized in the system tray area"
+                              Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"
+                              FontSize="12"
+                              Margin="20,0,0,0"/>
+                </ui:SimpleStackPanel>
+            </ui:SimpleStackPanel>
+            
+            <Separator/>
+            
+            <!-- Connection Settings Section -->
+            <ui:SimpleStackPanel>
+                <TextBlock Text="Connection Settings" 
+                          FontSize="20" 
+                          FontWeight="SemiBold" 
+                          Margin="0,0,0,10"/>
+                
+                <!-- Auto-reconnect Settings -->
+                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <CheckBox x:Name="AutoReconnectCheckBox" 
+                                 Content="Enable auto-reconnect" 
+                                 IsChecked="True"/>
+                        <ui:FontIcon Glyph="&#xE895;" FontSize="16" Margin="5,0,0,0"/>
+                    </ui:SimpleStackPanel>
+                    <TextBlock Text="Automatically attempt to reconnect when connection is lost"
+                              Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"
+                              FontSize="12"
+                              Margin="20,0,0,0"/>
+                </ui:SimpleStackPanel>
+                
+                <!-- Connection Status -->
+                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10" Margin="0,20,0,0">
+                    <TextBlock Text="Connection Status" FontWeight="SemiBold"/>
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <Ellipse x:Name="ConnectionStatusIndicator" 
+                                Width="12" Height="12" 
+                                Fill="Red"/>
+                        <TextBlock x:Name="ConnectionStatusText" 
+                                  Text="Disconnected" 
+                                  VerticalAlignment="Center"/>
+                    </ui:SimpleStackPanel>
+                </ui:SimpleStackPanel>
+            </ui:SimpleStackPanel>
+            
+            <Separator/>
+            
+            <!-- About Section -->
+            <ui:SimpleStackPanel>
+                <TextBlock Text="About" 
+                          FontSize="20" 
+                          FontWeight="SemiBold" 
+                          Margin="0,0,0,10"/>
+                
+                <ui:SimpleStackPanel Orientation="Vertical" Spacing="5">
+                    <TextBlock Text="elaphureLink v2.0" FontWeight="SemiBold"/>
+                    <TextBlock Text="Advanced debugging and connection management tool"
+                              Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="With enhanced auto-reconnect functionality"
+                              Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
+                </ui:SimpleStackPanel>
+            </ui:SimpleStackPanel>
+            
+        </StackPanel>
+    </ScrollViewer>
 </Page>
