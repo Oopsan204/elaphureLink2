@@ -41,13 +41,10 @@ void SocketClient::do_handshake()
     el_request_handshake_t req;
     req.el_link_identifier = htonl(EL_LINK_IDENTIFIER);
     req.command            = htonl(EL_COMMAND_HANDSHAKE);
-    req.el_proxy_version   = htonl(EL_DAP_VERSION);
-
-    asio::error_code ec;
+    req.el_proxy_version   = htonl(EL_DAP_VERSION);    asio::error_code ec;
     asio::write(get_socket(), asio::buffer(&req, sizeof(req)), ec);
     if (ec) {
-        notify_connection_status(false, ec.message());
-        close();
+        on_connection_lost("Handshake write failed: " + ec.message());
         return;
     }
 
@@ -59,20 +56,15 @@ void SocketClient::do_handshake()
                           asio::transfer_exactly(sizeof(res)),
                           ec);
     if (ec) {
-        notify_connection_status(false, ec.message());
-        close();
+        on_connection_lost("Handshake read failed: " + ec.message());
         return;
-    }
-
-    if (ntohl(res.el_link_identifier) != EL_LINK_IDENTIFIER) {
-        notify_connection_status(false, "connect failed: unexpected identifier");
-        close();
+    }    if (ntohl(res.el_link_identifier) != EL_LINK_IDENTIFIER) {
+        on_connection_lost("Handshake failed: unexpected identifier");
         return;
     }
 
     if (ntohl(req.command) != EL_COMMAND_HANDSHAKE) {
-        notify_connection_status(false, "connect failed: unexpected command");
-        close();
+        on_connection_lost("Handshake failed: unexpected command");
         return;
     }
 
@@ -85,20 +77,17 @@ void SocketClient::get_device_info()
     std::array<char, 1500> info_res_buffer;
 
 
-    auto get_dap_info = [&](std::array<uint8_t, 2> buf) {
-        asio::error_code ec;
+    auto get_dap_info = [&](std::array<uint8_t, 2> buf) {        asio::error_code ec;
         asio::write(get_socket(), asio::buffer(buf), asio::transfer_exactly(2), ec);
         if (ec) {
-            notify_connection_status(false, ec.message());
-            close();
+            on_connection_lost("Device info write failed: " + ec.message());
             return false;
         }
 
         get_socket().read_some(asio::buffer(info_res_buffer), ec);
         //asio::read(get_socket(), asio::buffer(info_res_buffer), asio::transfer_all(), ec);
         if (ec) {
-            notify_connection_status(false, ec.message());
-            close();
+            on_connection_lost("Device info read failed: " + ec.message());
             return false;
         }
 
@@ -153,22 +142,18 @@ void SocketClient::do_data_process()
         WaitForSingleObject(k_producer_event, INFINITE);
         if (!is_running_) {
             return; // socket close
-        }
-
-        asio::write(get_socket(),
+        }        asio::write(get_socket(),
                     asio::buffer(&(k_shared_memory_ptr->producer_page.data), k_shared_memory_ptr->producer_page.data_len),
                     ec);
         if (ec) {
-            set_running_status(false, ec.message());
-            close();
+            on_connection_lost("Data process write failed: " + ec.message());
             return;
         }
 
         // step2: receive response
         data_len = get_socket().read_some(asio::buffer(res_buffer), ec);
         if (ec) {
-            set_running_status(false, ec.message());
-            close();
+            on_connection_lost("Data process read failed: " + ec.message());
             return;
         }
 
@@ -323,9 +308,8 @@ void SocketClient::do_data_process()
                 case ID_DAP_SWD_Configure: {
                     p += 2;
                     break;
-                }
-                default:
-                    close();
+                }                default:
+                    on_connection_lost("Unknown DAP command received");
                     return;
             }
 
