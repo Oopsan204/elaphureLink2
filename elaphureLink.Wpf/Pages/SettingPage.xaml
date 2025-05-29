@@ -8,20 +8,16 @@
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Settings">
-    
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20" Spacing="20">
-            
-            <!-- Application Settings Section -->
-            <ui:SimpleStackPanel>
+      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+              <!-- Application Settings Section -->
+            <ui:SimpleStackPanel Margin="0,0,0,20">
                 <TextBlock Text="Application Settings" 
                           FontSize="20" 
                           FontWeight="SemiBold" 
                           Margin="0,0,0,10"/>
-                
-                <!-- Startup Settings -->
-                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                  <!-- Startup Settings -->
+                <ui:SimpleStackPanel Orientation="Vertical" Margin="0,0,0,10">                    <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <CheckBox x:Name="StartupCheckBox" 
                                  Content="Start with Windows" 
                                  Checked="StartupCheckBox_Checked"
@@ -33,10 +29,9 @@
                               FontSize="12"
                               Margin="20,0,0,0"/>
                 </ui:SimpleStackPanel>
-                
-                <!-- Start Minimized -->
-                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10" Margin="0,20,0,0">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                  <!-- Start Minimized -->
+                <ui:SimpleStackPanel Orientation="Vertical" Margin="0,20,0,0">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <CheckBox x:Name="StartMinimizedCheckBox" 
                                  Content="Start minimized to system tray" 
                                  Checked="StartMinimizedCheckBox_Checked"
@@ -58,10 +53,9 @@
                           FontSize="20" 
                           FontWeight="SemiBold" 
                           Margin="0,0,0,10"/>
-                
-                <!-- Auto-reconnect Settings -->
-                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                  <!-- Auto-reconnect Settings -->
+                <ui:SimpleStackPanel Orientation="Vertical" Margin="0,0,0,10">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <CheckBox x:Name="AutoReconnectCheckBox" 
                                  Content="Enable auto-reconnect" 
                                  IsChecked="True"/>
@@ -72,11 +66,10 @@
                               FontSize="12"
                               Margin="20,0,0,0"/>
                 </ui:SimpleStackPanel>
-                
-                <!-- Connection Status -->
-                <ui:SimpleStackPanel Orientation="Vertical" Spacing="10" Margin="0,20,0,0">
+                  <!-- Connection Status -->
+                <ui:SimpleStackPanel Orientation="Vertical" Margin="0,20,0,0">
                     <TextBlock Text="Connection Status" FontWeight="SemiBold"/>
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <Ellipse x:Name="ConnectionStatusIndicator" 
                                 Width="12" Height="12" 
                                 Fill="Red"/>
@@ -95,8 +88,7 @@
                           FontSize="20" 
                           FontWeight="SemiBold" 
                           Margin="0,0,0,10"/>
-                
-                <ui:SimpleStackPanel Orientation="Vertical" Spacing="5">
+                  <ui:SimpleStackPanel Orientation="Vertical" Margin="0,0,0,5">
                     <TextBlock Text="elaphureLink v2.0" FontWeight="SemiBold"/>
                     <TextBlock Text="Advanced debugging and connection management tool"
                               Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
