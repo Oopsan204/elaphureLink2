@@ -93,7 +93,6 @@
     <Compile Include="Core\Log\DataGridDataItem.cs" />
     <Compile Include="Core\Log\DataGridDataSource.cs" />    <Compile Include="Core\SettingsService.cs" />
     <Compile Include="Core\Services\StartupService.cs" />
-    <Compile Include="Core\Services\SystemTrayService.cs" />
     <Compile Include="Core\WpfUpdate.cs" />
     <Compile Include="Messenger\ProxyStatusMessage.cs" />
     <Compile Include="Pages\ExitConfirmDialog.xaml.cs">

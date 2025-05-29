@@ -5,11 +5,12 @@ using System.Reflection;
 using System.Diagnostics;
 
 namespace elaphureLink.Wpf.Core.Services
-{
-    public interface IStartupService
+{    public interface IStartupService
     {
         bool IsStartupEnabled { get; }
         bool SetStartupEnabled(bool enabled);
+        void EnableStartup();
+        void DisableStartup();
     }
 
     public class StartupService : IStartupService
@@ -38,9 +39,7 @@ namespace elaphureLink.Wpf.Core.Services
                     return false;
                 }
             }
-        }
-
-        public bool SetStartupEnabled(bool enabled)
+        }        public bool SetStartupEnabled(bool enabled)
         {
             try
             {
@@ -48,7 +47,7 @@ namespace elaphureLink.Wpf.Core.Services
                 {
                     if (enabled)
                     {
-                        key?.SetValue(APP_NAME, $"\"{_appPath}\" --minimized");
+                        key?.SetValue(APP_NAME, $"\"{_appPath}\"");
                     }
                     else
                     {
@@ -62,6 +61,16 @@ namespace elaphureLink.Wpf.Core.Services
                 System.Diagnostics.Debug.WriteLine($"Failed to set startup: {ex.Message}");
                 return false;
             }
+        }
+        
+        public void EnableStartup()
+        {
+            SetStartupEnabled(true);
+        }
+        
+        public void DisableStartup()
+        {
+            SetStartupEnabled(false);
         }
     }
 }

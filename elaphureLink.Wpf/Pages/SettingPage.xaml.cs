@@ -19,7 +19,6 @@ namespace elaphureLink.Wpf.Pages
 {    public partial class SettingPage
     {
         private IStartupService _startupService;
-        private ISystemTrayService _systemTrayService;
         private ISettingsService _settingsService;
         
         public SettingPage()
@@ -28,7 +27,6 @@ namespace elaphureLink.Wpf.Pages
             
             // Get services from IoC container
             _startupService = App.IocKernel.Get<IStartupService>();
-            _systemTrayService = App.IocKernel.Get<ISystemTrayService>();
             _settingsService = App.IocKernel.Get<ISettingsService>();
             
             // Load current settings
@@ -40,11 +38,7 @@ namespace elaphureLink.Wpf.Pages
             try
             {
                 // Load startup setting
-                StartupCheckBox.IsChecked = _startupService.IsStartupEnabled();
-                
-                // Load start minimized setting (you might want to store this in settings service)
-                // For now, we'll assume it's false by default
-                StartMinimizedCheckBox.IsChecked = false;
+                StartupCheckBox.IsChecked = _startupService.IsStartupEnabled;
                 
                 // Update connection status (this would be updated from your connection logic)
                 UpdateConnectionStatus(false); // Assuming disconnected by default
@@ -52,7 +46,7 @@ namespace elaphureLink.Wpf.Pages
             catch (Exception ex)
             {
                 // Handle any errors loading settings
-                _systemTrayService?.ShowNotification("Settings Error", $"Failed to load settings: {ex.Message}");
+                MessageBox.Show($"Failed to load settings: {ex.Message}", "Settings Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         
@@ -74,13 +68,13 @@ namespace elaphureLink.Wpf.Pages
         {
             try
             {
-                _startupService.EnableStartup();
-                _systemTrayService?.ShowNotification("Startup Enabled", "elaphureLink will now start with Windows");
+                _startupService.SetStartupEnabled(true);
+                MessageBox.Show("elaphureLink will now start with Windows", "Startup Enabled", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 StartupCheckBox.IsChecked = false;
-                _systemTrayService?.ShowNotification("Startup Error", $"Failed to enable startup: {ex.Message}");
+                MessageBox.Show($"Failed to enable startup: {ex.Message}", "Startup Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         
@@ -88,27 +82,25 @@ namespace elaphureLink.Wpf.Pages
         {
             try
             {
-                _startupService.DisableStartup();
-                _systemTrayService?.ShowNotification("Startup Disabled", "elaphureLink will no longer start with Windows");
+                _startupService.SetStartupEnabled(false);
+                MessageBox.Show("elaphureLink will no longer start with Windows", "Startup Disabled", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 StartupCheckBox.IsChecked = true;
-                _systemTrayService?.ShowNotification("Startup Error", $"Failed to disable startup: {ex.Message}");
+                MessageBox.Show($"Failed to disable startup: {ex.Message}", "Startup Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         
         private void StartMinimizedCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            // Store this setting for future use
-            // You might want to add this to your settings service
-            _systemTrayService?.ShowNotification("Start Minimized", "Application will start minimized to system tray");
+            // This would be implemented if needed
+            MessageBox.Show("Start minimized feature noted", "Feature", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         
         private void StartMinimizedCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            // Store this setting for future use
-            _systemTrayService?.ShowNotification("Start Normal", "Application will start normally");
+            // This would be implemented if needed
         }
     }
 }
