@@ -17,7 +17,7 @@ class SocketClient
     public:
     // Auto-reconnect configuration
     struct ReconnectConfig {
-        bool enabled = false;
+        bool enabled = true;
         int interval_ms = 5000;          // Base interval between reconnect attempts
         int max_attempts = -1;           // Maximum attempts (-1 = unlimited)
         int backoff_multiplier = 1;      // Backoff multiplier (1 = no backoff, 2 = exponential)
