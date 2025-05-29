@@ -200,22 +200,40 @@ class SocketClient
         reconnect_failed_callback_ = callback;
     }
 
-    private:
-    void close()
+    private:    void close()
     {
-        is_running_ = false;
+        // Only set is_running_ = false if auto-reconnect is not active
+        if (!reconnect_config_.enabled || !is_reconnecting_) {
+            is_running_ = false;
+        }
+        
+        if (k_is_proxy_init) {
+            k_shared_memory_ptr->info_page.is_proxy_ready       = 0;
+            k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
+            SetEvent(k_producer_event);                                       // wake up
+            SetEvent(k_consumer_event);
+        }        asio::post(get_io_context(),
+                   [this]() {
+                       get_socket().close();
+                   });
+    }    void close_socket_only()
+    {
+        // Close the socket but don't affect is_running_ flag
+        // This is used when we want to close the current connection but keep auto-reconnect active
         if (k_is_proxy_init) {
             k_shared_memory_ptr->info_page.is_proxy_ready       = 0;
             k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
             SetEvent(k_producer_event);                                       // wake up
             SetEvent(k_consumer_event);
         }
-
+        
         asio::post(get_io_context(),
                    [this]() {
                        get_socket().close();
                    });
-    }    void do_connect(const tcp::resolver::results_type &endpoints)
+    }
+
+    void do_connect(const tcp::resolver::results_type &endpoints)
     {
         asio::async_connect(get_socket(), endpoints,
                             [&](std::error_code ec, tcp::endpoint) {
@@ -333,9 +351,7 @@ class SocketClient
                 attempt_reconnect();
             }
         });
-    }
-
-    void attempt_reconnect()
+    }    void attempt_reconnect()
     {
         if (!is_running_ || !reconnect_config_.enabled) {
             return;
@@ -352,18 +368,24 @@ class SocketClient
             return;
         }
 
+        // Check if io_context is stopped and restart if needed
+        if (get_io_context().stopped()) {
+            get_io_context().restart();
+        }
+
         // Create new socket and attempt reconnection
         socket_ = std::make_unique<asio::ip::tcp::socket>(get_io_context());
         do_connect(endpoint_);
-    }
-
-    void on_connection_lost(const std::string& reason)
+    }void on_connection_lost(const std::string& reason)
     {
         if (reconnect_config_.enabled && should_attempt_reconnect() && is_running_) {
+            // When auto-reconnect is enabled, just close the socket and schedule reconnect
+            close_socket_only();
             schedule_reconnect(reason);
         } else {
             is_reconnecting_ = false;
             notify_connection_status(false, reason);
+            close();
         }
     }
 };
