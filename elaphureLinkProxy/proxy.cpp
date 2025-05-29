@@ -66,10 +66,7 @@ class ProxyManager
         }
         client_.reset(nullptr);
     }
-    void test()
-    {
 
-    }
     private:
     onSocketConnectCallbackType    on_connect_callback_;
     onSocketDisconnectCallbackType on_socket_disconnect_callback_;
